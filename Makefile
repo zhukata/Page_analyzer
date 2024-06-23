@@ -2,7 +2,7 @@ install:
 	poetry install
 
 dev:
-	poetry run flask --app hexlet-code/page_analyzer:app run
+	poetry run flask --app hexlet-code/page_analyzer:app --debug run 
 
 PORT ?= 8000
 start:
