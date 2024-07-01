@@ -21,7 +21,7 @@
     </nav>
   </header>
 
-  {% with success = get_flashed_messages(category_filter=["success"]) %}
+  {% with success = get_flashed_messages() %}
   {% if success %}
   <div class="alert alert-success" role="alert">Страница успешно добавлена</div>
   {% endif %}

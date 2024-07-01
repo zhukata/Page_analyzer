@@ -36,16 +36,16 @@
               <th>Код ответа</th>
             </tr>
           </thead>
-          {% for url in urls %}
           <tbody>
+            {% for url in urls %}
             <tr>
-              <td>{{ url[0] }}</td>
-              <td><a href="/urls/{{ url[0] }}">{{url[1]}}</a></td>
-              <td>{{ url[2] }}</td>
-              <td>{{ url[3] }}</td>
+              <td>{{ url.id }}</td>
+              <td><a href="/urls/{{ url.id }}">{{url.name}}</a></td>
+              <td>{{ url.created_at }}</td>
+              <td>{{ url.status_code }}</td>
             </tr>
+            {% endfor %}
           </tbody>
-          {% endfor %}
         </table>
       </div>
 
