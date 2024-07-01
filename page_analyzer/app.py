@@ -11,8 +11,8 @@ import os
 
 from dotenv import load_dotenv
 
-from page_analyzer.db import db_save, db_urls, db_get_id, db_find, db_checks, db_save_checks
-from page_analyzer.functions import is_valid, normalaize_url
+from page_analyzer.db import db_save, db_urls, db_get_id, db_find, db_checks, db_save_checks, in_base
+from page_analyzer.functions import is_valid, normalaize_url, check_url
 
 
 load_dotenv()
@@ -43,12 +43,20 @@ def urls():
     
     if request.method == 'POST':
         data = request.form.to_dict()['url']
+
         if not is_valid(data):
             flash('Неккоректный URL', 'error')
             return render_template(
                 'index.html'
-               ), 422
+               )
         url = normalaize_url(data)
+
+        if in_base(url):
+            flash('Страница уже существует', 'info')
+            return render_template(
+                'index.html'
+               )
+        
         db_save(url)
         id = db_get_id(url)
         flash('Страница успешно добавлена', 'success')
@@ -58,7 +66,7 @@ def urls():
 @app.get('/urls/<int:id>')
 def urls_id(id):
     url = db_find(id)
-    url_name, url_created = url[0], url[1]
+    url_name, url_created = url.name, url.created_at
     url_checks = db_checks(id)
 
     return render_template(
@@ -72,14 +80,12 @@ def urls_id(id):
 
 @app.post('/urls/<int:id>/checks')
 def url_check(id):
-    url = db_urls()
-    db_save_checks(id, url)
-    # data = request.form.to_dict()['url']
-    # if not is_valid(data):
-    #     flash('Неккоректный URL', 'error')
-    #     return render_template(
-    #         'index.html'
-    #         ), 422
-    # url = normalaize_url(data)
+    url = db_find(id).name
+    if not check_url(url):
+        flash('Произошла ошибка при проверке', 'error')
+        return redirect(
+            url_for('urls_id', id=id)
+            )
+    db_save_checks(id, check_url(url))
     flash('Страница успешно проверена', 'success')
     return redirect(url_for('urls_id', id=id, ))

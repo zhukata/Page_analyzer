@@ -21,15 +21,21 @@
     </nav>
   </header>
 
-  {% with success = get_flashed_messages() %}
+  {% with success = get_flashed_messages(category_filter=["success"]) %}
   {% if success %}
-  <div class="alert alert-success" role="alert">Страница успешно добавлена</div>
+  <div class="alert alert-success" role="alert">{{ success[0] }}</div>
   {% endif %}
   {% endwith %}
 
-  {% with errors = get_flashed_messages(category_filter=["error"]) %}
-  {% if errors %}
-  <div class="alert alert-danger" role="alert">Некорректный URL</div>
+  {% with error = get_flashed_messages(category_filter=["error"]) %}
+  {% if error %}
+  <div class="alert alert-danger" role="alert">{{ error[0] }}</div>
+  {% endif %}
+  {% endwith %}
+
+  {% with info = get_flashed_messages(category_filter=["info"]) %}
+  {% if info %}
+  <div class="alert alert-info" role="alert">{{ info[0] }}</div>
   {% endif %}
   {% endwith %}
 
