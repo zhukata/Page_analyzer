@@ -16,7 +16,7 @@
       <a class="navbar-brand" href="/">Анализатор страниц</a>
       <div id="navbarNav">
         <ul class="navbar-nav">
-          <li class="nav-item"><a class="nav-link " href="/urls">Сайты</a></li>
+          <li class="nav-item"><a class="nav-link " href="{{ url_for('urls', _method='GET') }}">Сайты</a></li>
         </ul>
       </div>
     </nav>
@@ -60,7 +60,7 @@
       </div>
 
       <h2 class="mt-5 mb-3">Проверки</h2>
-      <form method="post" action="/urls/{{ id }}/checks">
+      <form method="post" action="{{ url_for('url_check', id=id) }}">
         <input type="submit" class="btn btn-primary" value="Запустить проверку">
       </form>
 
