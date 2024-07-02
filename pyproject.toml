@@ -20,6 +20,7 @@ psycopg2-binary = "^2.9.9"
 validators = "^0.28.3"
 datetime = "^5.5"
 requests = "^2.32.3"
+bs4 = "^0.0.2"
 
 [build-system]
 requires = ["poetry-core"]

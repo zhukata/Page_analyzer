@@ -4,23 +4,25 @@ import psycopg2
 from psycopg2.extras import NamedTupleCursor
 from datetime import date
 
+
 DATABASE_URL = os.getenv('DATABASE_URL')
+
 
 def db_save(data):
     conn = psycopg2.connect(DATABASE_URL)
     with conn.cursor() as cursor:
         cursor.execute('INSERT INTO urls (name, created_at) VALUES \
                        (%s, %s)', (data, date.today()))
-    conn.commit() 
+    conn.commit()
     conn.close()
-
 
 
 def db_find(id):
     item = ()
     conn = psycopg2.connect(DATABASE_URL)
     with conn.cursor(cursor_factory=NamedTupleCursor) as cursor:
-        cursor.execute('SELECT name, created_at FROM urls WHERE id=%s', (int(id),))
+        cursor.execute('SELECT name, created_at \
+                       FROM urls WHERE id=%s', (int(id),))
         item = cursor.fetchone()
     conn.close()
     return item
@@ -61,12 +63,18 @@ def db_checks(id):
     return url_checks
 
 
-def db_save_checks(id, data):
+def db_save_checks(id, url_content, status_code):
+    h1 = url_content.get('h1', '')
+    title = url_content.get('title', '')
+    description = url_content.get('description', '')
     conn = psycopg2.connect(DATABASE_URL)
     with conn.cursor() as cursor:
-        cursor.execute('INSERT INTO url_checks (url_id, status_code, created_at) VALUES \
-                       (%s, %s, %s)', (id, data, date.today()))
-    conn.commit() 
+        cursor.execute('INSERT INTO url_checks \
+                       (url_id, status_code, h1,\
+                        title, description, created_at) VALUES \
+                       (%s, %s, %s, %s, %s, %s)',
+                       (id, status_code, h1, title, description, date.today()))
+    conn.commit()
     conn.close()
 
 
@@ -76,6 +84,6 @@ def in_base(data):
         cursor.execute('SELECT * FROM urls WHERE name=%s', (data,))
         result = cursor.fetchall()
     conn.close()
-    if  not result:
+    if not result:
         return False
     return True
