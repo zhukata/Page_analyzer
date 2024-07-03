@@ -90,7 +90,13 @@ def url_check(id):
             url_for('urls_id', id=id)
         )
 
+    if not urls.check_url(url_name):
+        flash('Произошла ошибка при проверке', 'error')
+        return redirect(
+            url_for('urls_id', id=id)
+        )
+
     url_content = html.parse_url(url_name)
-    data_base.save_check_data(id, url_content, urls.check_url(url_name))
+    data_base.save_check_data(id, url_content, urls.get_status_code(url_name))
     flash('Страница успешно проверена', 'success')
     return redirect(url_for('urls_id', id=id, ))

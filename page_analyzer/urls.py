@@ -21,4 +21,8 @@ def check_url(url):
         r.raise_for_status()
     except requests.exceptions.RequestException:
         return False
+    return True
+
+def get_status_code(url):
+    r = requests.get(url)
     return r.status_code
