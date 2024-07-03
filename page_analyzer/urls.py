@@ -23,6 +23,7 @@ def check_url(url):
         return False
     return True
 
+
 def get_status_code(url):
     r = requests.get(url)
     return r.status_code

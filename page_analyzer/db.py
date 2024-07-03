@@ -62,15 +62,17 @@ class DatabaseUrls:
         return cheks_data
 
     def save_check_data(self, id, url_content, status_code):
-        h1 = url_content.get('h1', '')
-        title = url_content.get('title', '')
-        description = url_content.get('description', '')
+        h1 = url_content.get("h1", "")
+        title = url_content.get("title", "")
+        description = url_content.get("description", "")
         with self.db_connect as cursor:
-            cursor.execute('INSERT INTO url_checks \
+            cursor.execute(
+                "INSERT INTO url_checks \
             (url_id, status_code, h1,\
             title, description, created_at) VALUES \
-            (%s, %s, %s, %s, %s, %s)',
-            (id, status_code, h1, title, description, date.today()))
+            (%s, %s, %s, %s, %s, %s)",
+                (id, status_code, h1, title, description, date.today()),
+            )
 
     def in_base(self, data):
         with self.db_connect as cursor:
