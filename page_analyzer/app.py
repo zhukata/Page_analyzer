@@ -1,5 +1,8 @@
 import os
 
+import page_analyzer.html as html
+import page_analyzer.urls as urls
+
 from flask import (
     Flask,
     render_template,
@@ -10,10 +13,7 @@ from flask import (
 )
 from dotenv import load_dotenv
 
-from page_analyzer.db import db_save, db_urls, db_get_id, db_find
-from page_analyzer.db import db_checks, db_save_checks, in_base
-import page_analyzer.html as html
-import page_analyzer.urls as urls
+from page_analyzer.db import DatabaseConnect, DatabaseUrls
 
 
 load_dotenv()
@@ -21,6 +21,8 @@ load_dotenv()
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+
+DATABASE_URL = os.getenv('DATABASE_URL')
 
 
 @app.route('/')
@@ -32,7 +34,8 @@ def index():
 
 @app.get('/urls')
 def urls_get():
-    urls = db_urls()
+    data_base = DatabaseUrls(DatabaseConnect(DATABASE_URL))
+    urls = data_base.get_urls()
     return render_template(
         'urls.html',
         urls=urls,
@@ -41,6 +44,8 @@ def urls_get():
 
 @app.post('/urls')
 def urls_post():
+    data_base = DatabaseUrls(DatabaseConnect(DATABASE_URL))
+
     data = request.form.to_dict()['url']
 
     if not urls.is_valid_url(data):
@@ -50,21 +55,22 @@ def urls_post():
         ), 422
 
     url = urls.normalaize_url(data)
-    id = db_get_id(url)
 
-    if in_base(url):
+    if data_base.in_base(url):
         flash('Страница уже существует', 'info')
-        return redirect(url_for('urls_id', id=id))
+        return redirect(url_for('urls_id', id=data_base.get_id(url)))
 
-    db_save(url)
+    data_base.save(url)
     flash('Страница успешно добавлена', 'success')
-    return redirect(url_for('urls_id', id=id))
+    return redirect(url_for('urls_id', id=data_base.get_id(url)))
 
 
 @app.get('/urls/<int:id>')
 def urls_id(id):
-    url = db_find(id)
-    url_checks = db_checks(id)
+    data_base = DatabaseUrls(DatabaseConnect(DATABASE_URL))
+
+    url = data_base.find(id)
+    url_checks = data_base.get_checks_data(id)
     return render_template(
         'show.html',
         id=id,
@@ -75,14 +81,16 @@ def urls_id(id):
 
 @app.post('/urls/<int:id>/checks')
 def url_check(id):
-    url = db_find(id).name
-    if not urls.is_valid_url(url):
+    data_base = DatabaseUrls(DatabaseConnect(DATABASE_URL))
+
+    url_name = data_base.find(id).name
+    if not urls.is_valid_url(url_name):
         flash('Произошла ошибка при проверке', 'error')
         return redirect(
             url_for('urls_id', id=id)
         )
 
-    url_content = html.parse_url(url)
-    db_save_checks(id, url_content, urls.check_url(url))
+    url_content = html.parse_url(url_name)
+    data_base.save_check_data(id, url_content, urls.check_url(url_name))
     flash('Страница успешно проверена', 'success')
     return redirect(url_for('urls_id', id=id, ))
