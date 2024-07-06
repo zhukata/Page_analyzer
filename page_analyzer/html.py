@@ -16,7 +16,14 @@ def parse_url(url):
 
 
 def find_description(soup):
-    tag = soup.find('meta', content=True, attrs={"name": "description", })
+    tag = soup.find('meta', content=True, attrs={'name': 'description', })
     if tag:
         return tag['content']
     return ''
+
+
+def get_url_content(url_content):
+    h1 = url_content.get('h1', ' ')
+    title = url_content.get('title', ' ')
+    description = url_content.get('description', ' ')
+    return {'h1': h1, 'title': title, 'description': description}
