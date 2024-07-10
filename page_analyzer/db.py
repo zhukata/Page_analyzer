@@ -17,7 +17,7 @@ class DatabaseConnection:
         self.conn.commit()
         self.cursor.close()
         self.conn.close()
-        if exc_type == Exception:
+        if exc_type is not None:
             print(exc_val)
 
 
@@ -28,7 +28,9 @@ class UrlRepository:
     def save(self, data):
         with self.db_connect as cursor:
             cursor.execute("INSERT INTO urls (name, created_at) VALUES \
-                       (%s, %s)", (data, date.today()))
+                       (%s, %s) RETURNING id", (data, date.today()))
+            id = cursor.fetchone().id
+        return id
 
     def get(self, id):
         item = ()
@@ -50,11 +52,11 @@ class UrlRepository:
             data = cursor.fetchall()
         return data
 
-    def get_id(self, url):
+    def find_url_by_name(self, url):
         with self.db_connect as cursor:
-            cursor.execute("SELECT id FROM urls WHERE name=%s", (url,))
-            id = cursor.fetchone()
-        return id.id
+            cursor.execute("SELECT id, name FROM urls WHERE name=%s", (url,))
+            url = cursor.fetchone()
+        return url
 
     def get_url_checks(self, id):
         with self.db_connect as cursor:
@@ -69,9 +71,9 @@ class UrlRepository:
         with self.db_connect as cursor:
             cursor.execute(
                 "INSERT INTO url_checks \
-            (url_id, status_code, h1,\
-            title, description, created_at) VALUES \
-            (%s, %s, %s, %s, %s, %s)",
+                (url_id, status_code, h1,\
+                title, description, created_at) VALUES \
+                (%s, %s, %s, %s, %s, %s)",
                 (
                     id,
                     status_code,
@@ -81,11 +83,3 @@ class UrlRepository:
                     date.today(),
                 ),
             )
-
-    def is_exists(self, data):
-        with self.db_connect as cursor:
-            cursor.execute("SELECT * FROM urls WHERE name=%s", (data,))
-            result = cursor.fetchall()
-        if not result:
-            return False
-        return True

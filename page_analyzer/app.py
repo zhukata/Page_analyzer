@@ -23,7 +23,7 @@ app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 
 DATABASE_URL = os.getenv('DATABASE_URL')
 
-DatabaseURL = db.UrlRepository(db.DatabaseConnection(DATABASE_URL))
+url_repository = db.UrlRepository(db.DatabaseConnection(DATABASE_URL))
 
 
 @app.route('/')
@@ -34,9 +34,8 @@ def index():
 
 
 @app.get('/urls')
-def urls_get():
-    urls = DatabaseURL.get_urls()
-
+def get_urls_list():
+    urls = url_repository.get_urls()
     return render_template(
         'urls.html',
         urls=urls,
@@ -44,7 +43,7 @@ def urls_get():
 
 
 @app.post('/urls')
-def urls_post():
+def save_urls():
     data = request.form.to_dict()['url']
 
     if not urls.is_valid_url(data):
@@ -54,18 +53,24 @@ def urls_post():
         ), 422
 
     url = urls.normalaize_url(data)
-    if DatabaseURL.is_exists(url):
+
+    if existed_url := url_repository.find_url_by_name(url):
+        id = existed_url.id
         flash('Страница уже существует', 'info')
     else:
-        DatabaseURL.save(url)
+        id = url_repository.save(url)
         flash('Страница успешно добавлена', 'success')
-    return redirect(url_for('urls_id', id=DatabaseURL.get_id(url)))
+    return redirect(url_for('url_details', id=id))
 
 
 @app.get('/urls/<int:id>')
-def urls_id(id):
-    url = DatabaseURL.get(id)
-    url_checks = DatabaseURL.get_url_checks(id)
+def url_details(id):
+    url_checks = url_repository.get_url_checks(id)
+    url = url_repository.get(id)
+    if not url:
+        return render_template(
+            '404.html'
+        )
 
     return render_template(
         'show.html',
@@ -76,14 +81,24 @@ def urls_id(id):
 
 
 @app.post('/urls/<int:id>/checks')
-def url_check(id):
-    url_name = DatabaseURL.get(id).name
+def check_urls(id):
+    url_name = url_repository.get(id).name
 
     status_code = urls.check_url(url_name)
     if not status_code:
         flash('Произошла ошибка при проверке', 'error')
     else:
         url_content = html.get_url_content(html.parse_url(url_name))
-        DatabaseURL.save_check(id, url_content, status_code)
+        url_repository.save_check(id, url_content, status_code)
         flash('Страница успешно проверена', 'success')
-    return redirect(url_for('urls_id', id=id, ))
+    return redirect(url_for('url_details', id=id, ))
+
+
+@app.errorhandler(404)
+def not_found_error(error):
+    return render_template('404.html'), 404
+
+
+@app.errorhandler(500)
+def internal_error(error):
+    return render_template('500.html'), 500
