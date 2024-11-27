@@ -67,10 +67,10 @@ $ make dev
 Go to the browser address http://localhost:5000/  
 ### How to use the app:  
 #### Enter a verified address.
-![index_1](https://github.com/zhukata/python-project-83/blob/assets/255515125-1410a83a-fd85-4e4a-beb8-e2f8ee7ab3b3)
+![index_1](https://github.com/zhukata/python-project-83/blob/assets/255515125-1410a83a-fd85-4e4a-beb8-e2f8ee7ab3b3.png)
 #### Run a check.  
-![urls_1](https://github.com/zhukata/python-project-83/blob/assets/255515219-e9f7a290-380f-43a7-85ec-ae6b8882b6be)
+![urls_1](https://github.com/zhukata/python-project-83/blob/assets/255515219-e9f7a290-380f-43a7-85ec-ae6b8882b6be.png)
 #### Get results.
-![urls_2](https://github.com/zhukata/python-project-83/blob/assets/255515298-39503faf-41fe-4936-91a6-68aafb190ea0)
+![urls_2](https://github.com/zhukata/python-project-83/blob/assets/255515298-39503faf-41fe-4936-91a6-68aafb190ea0.png)
 #### The application saves verified sites.
-![urls_3](https://github.com/zhukata/python-project-83/blob/assets/255515374-52a36c71-5c0f-4ead-bb4d-e39735f5671d)
+![urls_3](https://github.com/zhukata/python-project-83/blob/assets/255515374-52a36c71-5c0f-4ead-bb4d-e39735f5671d.png)
