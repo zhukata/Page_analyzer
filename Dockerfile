@@ -1,5 +1,5 @@
 # Используем базовый образ Python
-FROM python:3.10-slim
+FROM python:3.10
 
 # Устанавливаем рабочую директорию
 WORKDIR /app
@@ -14,6 +14,7 @@ RUN pip install --no-cache-dir poetry
 
 # Устанавливаем зависимости
 RUN poetry config virtualenvs.create false && poetry install --no-dev
+# RUN psql -a -d $DATABASE_URL -f database.sql
 
 # Переменные окружения
 ENV FLASK_APP=page_analyzer:app
