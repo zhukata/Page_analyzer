@@ -13,4 +13,5 @@ start:
 	poetry run gunicorn -w 5 -b 0.0.0.0:$(PORT) page_analyzer:app
 
 build:
-	docker-compose up --build 
+	make install
+	docker-compose up --build
