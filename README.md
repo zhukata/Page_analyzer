@@ -1,8 +1,20 @@
 ### Hexlet tests and linter status:
-[![Actions Status](https://github.com/zhukata/python-project-83/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/zhukata/python-project-83/actions)
-[![Maintainability](https://api.codeclimate.com/v1/badges/b9aa6036d423b63cc674/maintainability)](https://codeclimate.com/github/zhukata/python-project-83/maintainability)
+[![Actions Status](https://github.com/zhukata/Page_analyzer/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/zhukata/Page_analyzer/actions)
+[![Maintainability](https://api.codeclimate.com/v1/badges/b9aa6036d423b63cc674/maintainability)](https://codeclimate.com/github/zhukata/Page_analyzer/maintainability)
 
 [Page Analyzer](https://page-analyzer-qlcp.onrender.com) – это сайт, который анализирует указанные страницы на SEO-пригодность.
+
+### Technologies Used:
+
+* Backend: Python (Flask framework)
+
+* Database: PostgreSQL
+
+* Task Runner: Poetry
+
+* Web Server: Gunicorn
+
+* Containerization: Docker and Docker Compose
 
 ### How to install the app:  
 For install and use the application you will need the following applications: 
@@ -21,9 +33,10 @@ Clone the application from GitHub and install the necessary
 libraries using the 'make install' command.  
 All commands starting with '$ make' are executed in the application directory.  
 ```
-$ git clone git@github.com:serVmik/python-project-83.git  
-$ cd python-project-83  
-$ make install  
+$ git clone git@github.com:serVmik/Page_analyzer.git  
+$ cd Page_analyzer  
+$ make install
+$ make shell 
 ```
 
 Install postgresql:  
@@ -43,34 +56,29 @@ postgres=# ALTER ROLE {user_name} PASSWORD '{password}';
 postgres=# \q
 ```
 
-Next, create the 'page_analyzer' database and tables. 
-'make schema-db' command will create the tables only in the 'page_analyzer' database:
-```
-$ sudo -u postgres createdb --owner={user_name} page_analyzer  
-$ make schema-db
-```
-
 Create '.env' file in the root folder and add the following variables to it.  
 Set the secret key.  
 Enter password for user_name.
 ```  
 SECRET_KEY={secret_key}  
-DATABASE_URL=postgresql://{user_name}:{password}@localhost:5432/page_analyzer  
+DATABASE_URL=postgresql://{user_name}:{password}@localhost:5432/urls
+POSTGRES_USER={username}
+POSTGRES_PASSWORD={password}
+POSTGRES_DB=urls
 ```  
 
-Run the application local:  
+Run the application with Docker-compose:  
 ```
-$ poetry shell
-$ make dev  
+$ make docker-compose
 ```
 
-Go to the browser address http://localhost:5000/  
+Go to the browser address http://localhost:8000/  
 ### How to use the app:  
 #### Enter a verified address.
-![index_1](https://github.com/zhukata/python-project-83/blob/assets/255515125-1410a83a-fd85-4e4a-beb8-e2f8ee7ab3b3.png)
+![index_1](https://github.com/zhukata/Page_analyzer/blob/assets/255515125-1410a83a-fd85-4e4a-beb8-e2f8ee7ab3b3.png)
 #### Run a check.  
-![urls_1](https://github.com/zhukata/python-project-83/blob/assets/255515219-e9f7a290-380f-43a7-85ec-ae6b8882b6be.png)
+![urls_1](https://github.com/zhukata/Page_analyzer/blob/assets/255515219-e9f7a290-380f-43a7-85ec-ae6b8882b6be.png)
 #### Get results.
-![urls_2](https://github.com/zhukata/python-project-83/blob/assets/255515298-39503faf-41fe-4936-91a6-68aafb190ea0.png)
+![urls_2](https://github.com/zhukata/Page_analyzer/blob/assets/255515298-39503faf-41fe-4936-91a6-68aafb190ea0.png)
 #### The application saves verified sites.
-![urls_3](https://github.com/zhukata/python-project-83/blob/assets/255515374-52a36c71-5c0f-4ead-bb4d-e39735f5671d.png)
+![urls_3](https://github.com/zhukata/Page_analyzer/blob/assets/255515374-52a36c71-5c0f-4ead-bb4d-e39735f5671d.png)
