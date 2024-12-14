@@ -33,7 +33,7 @@ Clone the application from GitHub and install the necessary
 libraries using the 'make install' command.  
 All commands starting with '$ make' are executed in the application directory.  
 ```
-$ git clone git@github.com:serVmik/Page_analyzer.git  
+$ git clone https://github.com/zhukata/Page_analyzer  
 $ cd Page_analyzer  
 $ make install
 $ make shell 
@@ -72,7 +72,46 @@ Run the application with Docker-compose:
 $ make docker-compose
 ```
 
-Go to the browser address http://localhost:8000/  
+Go to the browser address http://localhost:8000/
+
+### How to deploy the app(Render):
+Deploying Page Analyzer on Render
+You can deploy the Page Analyzer project on Render, a platform for hosting web applications, using these steps:
+
+1. Prerequisites
+Ensure that your project is ready for deployment:
+
+* PostgreSQL: A database instance is required for the project. Render provides a managed PostgreSQL database service.
+* Environment Variables: The DATABASE_URL must be properly set for the database connection.
+
+2. Setting up a PostgreSQL Database on Render
+* Go to the Render Dashboard.
+* Create a new PostgreSQL database by clicking New → PostgreSQL.
+* After creating the database, Render will provide a connection string. It will look like this:
+```
+postgres://<username>:<password>@<host>:<port>/<database>
+```
+* Copy this connection string and save it for later.
+
+3. Deploying the Web Service
+Create a New Web Service:
+
+* In the Render Dashboard, click New → Web Service.
+Connect your GitHub repository for the project (e.g., zhukata/Page_analyzer).
+* Set the Build Command: Use the following build command:
+```
+
+$ make build
+```
+* Set the Start Command: Use the following start command to run the application:
+```
+
+$ make start
+```
+* Configure Environment Variables: Add the required environment variable DATABASE_URL, SECRET_KEY.
+
+* Click Create Web Service
+
 ### How to use the app:  
 #### Enter a verified address.
 ![index_1](https://github.com/zhukata/Page_analyzer/blob/assets/255515125-1410a83a-fd85-4e4a-beb8-e2f8ee7ab3b3.png)
